@@ -2,7 +2,7 @@ var table;
 $(document).ready(function () {
     // top nav bar
     $('#nav-link-employee-sales').addClass('active');
-	var userId = $("#user_id").val();
+    var userId = $('#user_id').val();
     bindingEmployeeSales(new Date().getFullYear());
 
     $('#btnFilterEmployeeSales')
@@ -15,7 +15,7 @@ $(document).ready(function () {
     $('#product-selection').select2({
         placeholder: 'Chọn sản phẩm',
         ajax: {
-            url: '/psi/php_action/productSearch.php',
+            url: '/php_action/productSearch.php',
             dataType: 'json',
             delay: 250,
             type: 'POST',
@@ -57,7 +57,7 @@ $(document).ready(function () {
 
         if (form[0].checkValidity() && !_.isEmpty(months)) {
             $.ajax({
-                url: '/psi/php_action/employeeSaleCreate.php',
+                url: '/php_action/employeeSaleCreate.php',
                 type: 'POST',
                 data: data,
                 success: function (response) {
@@ -82,14 +82,14 @@ $(document).ready(function () {
 });
 
 function bindingEmployeeSales(year) {
-    var userId = $("#user_id").val();
-    var levelId = $("#level_id").val();
+    var userId = $('#user_id').val();
+    var levelId = $('#level_id').val();
     $.ajax({
-        url: '/psi/php_action/employeeSaleFetch.php',
+        url: '/php_action/employeeSaleFetch.php',
         type: 'get',
         data: {
             userId: userId,
-            levelId:levelId,
+            levelId: levelId,
             year: year
         },
         dataType: 'json',
@@ -132,8 +132,15 @@ function bindingEmployeeSales(year) {
                     table.append(`
                         <tr>
                             <td class="not-editable">${_.get(sale, '0.product_id', '')} </td>
+                            <td class="not-editable">${_.get(sale, '0.product_code', '')} </td>
                             <td class="not-editable">${_.get(sale, '0.model') || 0} </td>
-                            <td class="not-editable">${_.get(_.find(agencyOptions, (o) => o.value === _.get(sale, '0.agency_id')),'title','')} </td>
+                            <td class="not-editable">${_.get(sale, '0.business_unit_name') || 0} </td>
+                            <td class="not-editable">${_.get(
+                                _.find(agencyOptions, (o) => o.value === _.get(sale, '0.agency_id')),
+                                'title',
+                                ''
+                            )} </td>
+                            <td class="not-editable">${_.get(sale, '0.stock') || 0} </td>
                             ${td}
                         </tr>
               `);
@@ -148,7 +155,7 @@ function bindingEmployeeSales(year) {
                 $('#table_agency_sales tbody tr td:not(.not-editable)').editable({
                     send: 'always',
                     type: 'text',
-                    url: '/psi/php_action/employeeSaleUpdate.php',
+                    url: '/php_action/employeeSaleUpdate.php',
                     params: function (params) {
                         var state = $(this).attr('data-state');
                         var agencyId = $(this).attr('data-agency-id');
@@ -179,7 +186,7 @@ function bindingEmployeeSales(year) {
                 $('#agency-selection').select2({
                     placeholder: 'Chọn đại lý',
                     ajax: {
-                        url: '/psi/php_action/agencySearch.php',
+                        url: '/php_action/agencySearch.php',
                         dataType: 'json',
                         delay: 250,
                         type: 'POST',

@@ -35,7 +35,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
 
 <!-- Custom app js -->
-<script src="/psi/custom/js/app.js"></script>
+<script src="/custom/js/app.js"></script>
 
 
 </body>

@@ -15,7 +15,7 @@ $(document).ready(function () {
     $('#product-selection').select2({
         placeholder: 'Chọn sản phẩm',
         ajax: {
-            url: '/psi/php_action/productSearch.php',
+            url: '/php_action/productSearch.php',
             dataType: 'json',
             delay: 250,
             type: 'POST',
@@ -58,7 +58,7 @@ $(document).ready(function () {
 
         if (form[0].checkValidity() && !_.isEmpty(months)) {
             $.ajax({
-                url: '/psi/php_action/inventoryCreate.php',
+                url: '/php_action/inventoryCreate.php',
                 type: 'POST',
                 data: data,
                 success: function (response) {
@@ -80,51 +80,51 @@ $(document).ready(function () {
         e.preventDefault();
         $('form[name=add_inventory]').trigger('reset');
     });
-                    $('#table_inventories').DataTable({
-                    destroy: true,
-                    responsive: true,
-                    ordering: false
-                });
+    $('#table_inventories').DataTable({
+        destroy: true,
+        responsive: true,
+        ordering: false
+    });
 
-                $('#table_inventories tbody tr td:not(.not-editable)').editable({
-                    send: 'always',
-                    type: 'text',
-                    url: '/psi/php_action/inventoryUpdate.php',
-                    params: function (params) {
-                        var state = $(this).attr('data-state');
-                        params.year = 2021;
-                        params.state = state;
+    $('#table_inventories tbody tr td:not(.not-editable)').editable({
+        send: 'always',
+        type: 'text',
+        url: '/php_action/inventoryUpdate.php',
+        params: function (params) {
+            var state = $(this).attr('data-state');
+            params.year = 2021;
+            params.state = state;
 
-                        return params;
-                    },
-                    validate: function (value) {
-                        if (!Number.isInteger(parseFloat(value))) {
-                            return 'Chỉ nhập số nguyên';
-                        }
-                    },
-                    success: function (response, newValue) {
-                        if (response && response.success) {
-                            toastr.success('Cập nhật thành công!');
-                        } else {
-                            toastr.error('Cập nhật không thành công!');
-                        }
-                    },
-                    ajaxOptions: {
-                        type: 'POST',
-                        dataType: 'json'
-                    }
-                });
+            return params;
+        },
+        validate: function (value) {
+            if (!Number.isInteger(parseFloat(value))) {
+                return 'Chỉ nhập số nguyên';
+            }
+        },
+        success: function (response, newValue) {
+            if (response && response.success) {
+                toastr.success('Cập nhật thành công!');
+            } else {
+                toastr.error('Cập nhật không thành công!');
+            }
+        },
+        ajaxOptions: {
+            type: 'POST',
+            dataType: 'json'
+        }
+    });
 });
 
 function bindingInventories(year) {
-	var userId = $("#user_id").val();
-    var levelId = $("#level_id").val();
+    var userId = $('#user_id').val();
+    var levelId = $('#level_id').val();
     $.ajax({
-        url: '/psi/php_action/inventoryFetch.php',
+        url: '/php_action/inventoryFetch.php',
         type: 'get',
         data: {
             userId: userId,
-            levelId:levelId,
+            levelId: levelId,
             year: year
         },
         dataType: 'json',

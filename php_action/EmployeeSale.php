@@ -10,27 +10,35 @@ class EmployeeSale
         $this->db = new Database;
     }
 
-    public function getAgencySales($agencyIds, $year)
+    public function getAgencySales($agencyIds)
     {
+        $currentYear = (int) date('Y');
+        $currentMonth = date('m');
+
         $agencyIds = implode(",", $agencyIds);
         $db = $this->db;
 
         $db->query("SELECT DISTINCT t1.product_id, t1.agency_id
                             FROM psi_agency_sales as t1
-                            WHERE (DATE(CONCAT(`year`, '-', `month`, '-01')) BETWEEN '{$year}-01-01' AND '{$year}-12-31') AND `agency_id` IN ($agencyIds)
+                            WHERE (DATE(CONCAT(`year`, '-', `month`, '-10')) BETWEEN '{$currentYear}-{$currentMonth}-01' AND '{$currentYear}-12-31') AND `agency_id` IN ($agencyIds)
                             ");
 
         $results = $this->db->resultSet();
 
-        $newResults = array_map(function ($item) use ($db, $year, $agencyIds) {
+        $newResults = array_map(function ($item) use ($db, $currentYear, $agencyIds, $currentMonth) {
             $db->query("SELECT p.product_code, p.name, p.model, p.business_unit_id, p.industry_id, p.product_type_id,
-                                 t1.product_id, t1.month, t1.year, t1.number_of_sale_goods, t1.agency_id
+                                 t1.product_id, t1.month, t1.year, t1.number_of_sale_goods, t1.agency_id, s.stock, bu.name as business_unit_name
                             FROM psi_agency_sales as t1
                             JOIN psi_products as p
                             ON p.id = t1.product_id
+                            JOIN psi_business_units as bu
+                            ON p.business_unit_id = bu.id
+                            LEFT JOIN psi_stocks as s
+                            on s.product_code = p.product_code AND bu.name = s.business_unit
                             WHERE t1.product_id = {$item->product_id} AND t1.agency_id = {$item->agency_id}
-                                AND (DATE(CONCAT(`year`, '-', `month`, '-01')) BETWEEN '{$year}-01-01' AND '{$year}-12-31' )
-                                AND `agency_id` IN ($agencyIds)");
+                                AND (DATE(CONCAT(`year`, '-', `month`, '-01')) BETWEEN '{$currentYear}-{$currentMonth}-01' AND '{$currentYear}-12-31' )
+                                AND `agency_id` IN ($agencyIds)
+                            ");
             return $db->resultSet();
         }, $results);
 
@@ -42,7 +50,7 @@ class EmployeeSale
         $this->db->query('SELECT * FROM psi_agency_sales WHERE product_id = :product_id and month = :month and year = :year and agency_id = :agency_id');
 
         $this->db->bind(':product_id', $productId);
-        $this->db->bind(':month', $month);
+        $this->db->bind(':month', (int) $month);
         $this->db->bind(':year', $year);
         $this->db->bind(':agency_id', $agencyId);
 
@@ -87,7 +95,7 @@ class EmployeeSale
         $db->query($query);
         $db->bind(':product_id', data_get($data, 'product_id'));
         $db->bind(':agency_id', $agencyId);
-        $db->bind(':month', data_get($data, 'month'));
+        $db->bind(':month', (int) data_get($data, 'month'));
         $db->bind(':year', data_get($data, 'year'));
         $db->bind(':number_of_sale_goods', data_get($data, 'number_of_sale_goods'));
         // $db->bind(':number_of_remaining_goods', data_get($data, 'number_of_remaining_goods'));

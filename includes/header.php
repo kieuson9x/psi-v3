@@ -1,4 +1,3 @@
-
 <?php require_once 'php_action/core.php'; ?>
 
 <!DOCTYPE html>
@@ -39,18 +38,27 @@
   <!-- jquery -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-deparam/0.5.1/jquery-deparam.min.js"></script>
-<style>
-  table.dataTable tbody th, table.dataTable tbody td{
-    border: 1px solid !important;
-    text-align: center;  }
-  table.dataTable thead th, table.dataTable thead td{
-    border: 1px solid !important;
-    text-align: center;
-  }
+  <style>
+    table.dataTable tbody th,
+    table.dataTable tbody td {
+      border: 1px solid !important;
+      text-align: center;
+    }
+
+    table.dataTable thead th,
+    table.dataTable thead td {
+      border: 1px solid !important;
+      text-align: center;
+    }
   </style>
 </head>
 
 <body>
-	<input type="hidden" id="user_id" value="<?php echo $_SESSION['user_id']; ?>"/>
-  <input type="hidden" id="level_id" value="<?php echo $_SESSION['level_id']; ?>"/>
+  <input type="hidden" id="user_id" value="<?php echo $_SESSION['user_id']; ?>" />
+  <input type="hidden" id="level_id" value="<?php echo $_SESSION['level_id']; ?>" />
+
+  <?php
+  require 'includes/navigation.php';
+  ?>
+
   <div class="container-fluid" id="main">

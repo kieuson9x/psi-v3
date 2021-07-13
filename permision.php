@@ -1,56 +1,56 @@
-<? require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
-$APPLICATION->SetTitle("Hệ thống báo cáo  PSI");
-
+<?
+// require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
+// $APPLICATION->SetTitle("Hệ thống báo cáo  PSI");
 ?>
-<?php 
-require_once 'includes/header.php'; 
+<?php
+require_once 'includes/header.php';
 ?>
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card ">
-                <div class="card-header form-group">
+<div class="row">
+    <div class="col-md-12">
+        <div class="card ">
+            <div class="card-header form-group">
                 <div class="form-group row">
-                        <h4 for="year" class="col-xs-2 col-form-label mr-2">Danh sách Nhân viên</h4>
-                        <div class="col-xs-2">
-                            <a href="#addSaleModal" class="btn btn-success d-flex align-items-center justify-content " data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Thêm nhân viên</span></a>
-                        </div>
+                    <h4 for="year" class="col-xs-2 col-form-label mr-2">Danh sách Nhân viên</h4>
+                    <div class="col-xs-2">
+                        <a href="#addSaleModal" class="btn btn-success d-flex align-items-center justify-content " data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Thêm nhân viên</span></a>
                     </div>
                 </div>
+            </div>
 
-                <div class="card-body">
-                    <table class="table table-striped" id="table_agencies">
-                        <thead>
-                            <tr>
-                                <td>ID</td>
-                                <td>Tên nhân viên</td>
-                                <td>Mã nhân viên</td>
-                                <td>Phòng ban</td>
-                                <td>Đơn vị</td>
-                                <td>Chức vụ</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                    <!-- /table -->
+            <div class="card-body">
+                <table class="table table-striped" id="table_agencies">
+                    <thead>
+                        <tr>
+                            <td>ID</td>
+                            <td>Tên nhân viên</td>
+                            <td>Mã nhân viên</td>
+                            <td>Phòng ban</td>
+                            <td>Đơn vị</td>
+                            <td>Chức vụ</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                <!-- /table -->
 
-                </div> <!-- /panel-body -->
-            </div> <!-- /panel -->
-        </div> <!-- /col-md-12 -->
-    </div> <!-- /row -->
+            </div> <!-- /panel-body -->
+        </div> <!-- /panel -->
+    </div> <!-- /col-md-12 -->
+</div> <!-- /row -->
 <!-- add product plan -->
 <div id="addSaleModal" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form name="add_employee" method="POST" action="/psi/php_action/employeeSaleCreate.php" class="form-horizontal">
-			  <input type="hidden" id="tennhanvien" value=""/>
+            <form name="add_employee" method="POST" action="/php_action/employeeSaleCreate.php" class="form-horizontal">
+                <input type="hidden" id="tennhanvien" value="" />
                 <div class="modal-header">
                     <h4 class="modal-title">Thêm mới nhân viên</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 </div>
                 <div class="modal-body">
-                <div class="form-group row">
+                    <div class="form-group row">
                         <label>Tên nhân viên</label>
                         <select id="nhanvien-selection" class="form-control" required name="nhanvien" data-live-search="true" style="width: 100%"></select>
                         <div class="invalid-feedback">
@@ -88,7 +88,7 @@ require_once 'includes/header.php';
         </div>
     </div>
 
-<script src="custom/js/employee.js"></script>
+    <script src="custom/js/employee.js"></script>
 
-<?php require_once 'includes/footer.php'; ?>
-<? require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php"); ?>
+    <?php require_once 'includes/footer.php'; ?>
+    <? require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php"); ?>

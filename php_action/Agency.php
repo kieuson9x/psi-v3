@@ -1,4 +1,3 @@
-
 <?php
 
 require_once 'db_connect.php';
@@ -70,9 +69,8 @@ class Agency
         $this->db->query('SELECT * FROM psi_employees');
 
         $results = $this->db->resultSet();
-        
-        return $results;
 
+        return $results;
     }
     public function getAllAgencyOptions()
     {

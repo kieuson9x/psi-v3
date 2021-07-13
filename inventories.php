@@ -1,63 +1,67 @@
-<? require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php"); 
-$APPLICATION->SetTitle("Hệ thống báo cáo  PSI");
-?><?php require_once 'includes/header.php'; ?>
+<?php
+// require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
+// $APPLICATION->SetTitle("Hệ thống báo cáo  PSI");
+?>
+<?php require_once 'includes/header.php'; ?>
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card ">
-                <div class="card-header">
-                    Bảng nhập tồn kho
-                </div>
-                <div class="card-body">
-                    <div class="form-group row">
-                        <label for="year" class="col-xs-2 col-form-label mr-2">Năm</label>
-                        <div class="col-xs-4 mr-2">
-                            <select id="year-selection" class="form-control" id="year" name="year">
-                                <?php for ($i = date('Y') - 1; $i <= date('Y') + 2; $i++) : ?>
-                                    <option value="<?php echo $i ?>"><?php echo $i ?></option>
-                                <?php endfor ?>
-                            </select>
-                        </div>
-                        <button id="btnFilterInventories" type="button" class="btn btn-primary mr-1 w-40  d-flex align-items-center justify-content">
-                            <i class="material-icons">filter_alt</i>
-                            Lọc
-                        </button>
-
-                        <div class="col-xs-4">
-                            <a href="#addProductPlanModal" class="btn btn-success d-flex align-items-center justify-content " data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Thêm/Cập nhật số nhập
-                                    mới</span></a>
-                        </div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card ">
+            <div class="card-header">
+                Bảng nhập tồn kho
+            </div>
+            <div class="card-body">
+                <div class="form-group row">
+                    <label for="year" class="col-xs-2 col-form-label mr-2">Năm</label>
+                    <div class="col-xs-4 mr-2">
+                        <select id="year-selection" class="form-control" id="year" name="year">
+                            <?php for ($i = date('Y') - 1; $i <= date('Y') + 2; $i++) : ?>
+                                <option value="<?php echo $i ?>"><?php echo $i ?></option>
+                            <?php endfor ?>
+                        </select>
                     </div>
+                    <button id="btnFilterInventories" type="button" class="btn btn-primary mr-1 w-40  d-flex align-items-center justify-content">
+                        <i class="material-icons">filter_alt</i>
+                        Lọc
+                    </button>
 
-                    <table class="table table-striped" id="table_inventories">
-                        <thead>
-                            <tr>
-                                <td rowspan="2">ID</td>
-                                <td rowspan="2">Mã sản phẩm</td>
-                                <?php $month = date('m'); for ($i = $month; $i <= 12; $i++) : ?>
-                                    <th data-editable="true" colspan="3"><?php echo "Tháng {$i}"; ?></th>
+                    <div class="col-xs-4">
+                        <a href="#addProductPlanModal" class="btn btn-success d-flex align-items-center justify-content " data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Thêm/Cập nhật số nhập
+                                mới</span></a>
+                    </div>
+                </div>
 
-                                <?php endfor ?>
-                            </tr>
+                <table class="table table-striped" id="table_inventories">
+                    <thead>
+                        <tr>
+                            <td rowspan="2">ID</td>
+                            <td rowspan="2">Mã sản phẩm</td>
+                            <?php $month = date('m');
+                            for ($i = $month; $i <= 12; $i++) : ?>
+                                <th data-editable="true" colspan="3"><?php echo "Tháng {$i}"; ?></th>
 
-                            <tr>
-                            <?php $month = date('m'); for ($i = $month; $i <= 12; $i++) : ?>
-                                    <th data-editable="true">P</th>
-                                    <th>S</th>
-                                    <th data-editable="true">I</th>
-                                <?php endfor ?>
-                            </tr>
-                        </thead>
-                        <tbody>
+                            <?php endfor ?>
+                        </tr>
 
-                        </tbody>
-                    </table>
-                    <!-- /table -->
+                        <tr>
+                            <?php $month = date('m');
+                            for ($i = $month; $i <= 12; $i++) : ?>
+                                <th data-editable="true">P</th>
+                                <th>S</th>
+                                <th data-editable="true">I</th>
+                            <?php endfor ?>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-                </div> <!-- /panel-body -->
-            </div> <!-- /panel -->
-        </div> <!-- /col-md-12 -->
-    </div> <!-- /row -->
+                    </tbody>
+                </table>
+                <!-- /table -->
+
+            </div> <!-- /panel-body -->
+        </div> <!-- /panel -->
+    </div> <!-- /col-md-12 -->
+</div> <!-- /row -->
 
 <!-- add product plan -->
 <div id="addProductPlanModal" class="modal fade">
@@ -92,7 +96,8 @@ $APPLICATION->SetTitle("Hệ thống báo cáo  PSI");
                     <div class="form-group row">
                         <label>Tháng</label>
                         <div class="form-group">
-                        <?php $month = date('m'); for ($i = $month; $i <= 12; $i++) : ?>
+                            <?php $month = date('m');
+                            for ($i = $month; $i <= 12; $i++) : ?>
                                 <div id="month-selection" class="form-check form-check-inline">
                                     <input class="form-check-input" type="checkbox" name="months[]" value="<?php echo $i ?>">
                                     <label class="form-check-label" for="month_<?php echo $i ?>">Tháng <?php echo $i ?></label>
@@ -122,4 +127,4 @@ $APPLICATION->SetTitle("Hệ thống báo cáo  PSI");
     <script src="custom/js/inventories.js"></script>
 
     <?php require_once 'includes/footer.php'; ?>
-    <? require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php"); ?>
+    <?php require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php"); ?>

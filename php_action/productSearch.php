@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $productOptions = array_map(function ($item) {
         return [
             'id' => $item->id,
-            'text' => $item->name
+            'text' => $item->business_unit_name . '-' . $item->name
         ];
     }, $products);
 

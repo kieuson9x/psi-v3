@@ -5,7 +5,7 @@ $(document).ready(function () {
     $('#nhanvien-selection').select2({
         placeholder: 'Chọn nhân viên',
         ajax: {
-            url: '/psi/php_action/selectemployee.php',
+            url: '/php_action/selectemployee.php',
             dataType: 'json',
             delay: 250,
             type: 'POST',
@@ -24,7 +24,7 @@ $(document).ready(function () {
     $('#phongban-selection').select2({
         placeholder: 'Chọn Phòng Ban',
         ajax: {
-            url: '/psi/php_action/selectphongban.php',
+            url: '/php_action/selectphongban.php',
             dataType: 'json',
             delay: 250,
             type: 'POST',
@@ -40,10 +40,10 @@ $(document).ready(function () {
             }
         }
     });
-        $('#donvi-selection').select2({
+    $('#donvi-selection').select2({
         placeholder: 'Chọn đơn vị',
         ajax: {
-            url: '/psi/php_action/selectdonvi.php',
+            url: '/php_action/selectdonvi.php',
             dataType: 'json',
             delay: 250,
             type: 'POST',
@@ -59,10 +59,10 @@ $(document).ready(function () {
             }
         }
     });
-        $('#chucvu-selection').select2({
+    $('#chucvu-selection').select2({
         placeholder: 'Chọn Chức vụ',
         ajax: {
-            url: '/psi/php_action/selectchucvu.php',
+            url: '/php_action/selectchucvu.php',
             dataType: 'json',
             delay: 250,
             type: 'POST',
@@ -78,15 +78,15 @@ $(document).ready(function () {
             }
         }
     });
-        $('#add_employee_btn').on('click', function (e) {
+    $('#add_employee_btn').on('click', function (e) {
         e.preventDefault();
 
         //Fetch form to apply custom Bootstrap validation
         var form = $('form[name=add_employee]');
-		$("#tennhanvien").val($("#nhanvien-selection option:selected").text());
-		var tennhanvien = $("#tennhanvien").val(); 
+        $('#tennhanvien').val($('#nhanvien-selection option:selected').text());
+        var tennhanvien = $('#tennhanvien').val();
 
-        var formData = form.serialize() + "&tennhanvien=" + tennhanvien;
+        var formData = form.serialize() + '&tennhanvien=' + tennhanvien;
         var data = $.deparam(formData);
 
         if (form[0].checkValidity() === false) {
@@ -94,9 +94,8 @@ $(document).ready(function () {
         }
         form.addClass('was-validated');
         if (form[0].checkValidity()) {
-
             $.ajax({
-                url: '/psi/php_action/EmployeeAdd.php', 
+                url: '/php_action/EmployeeAdd.php',
                 type: 'POST',
                 data: data,
                 success: function (response) {
@@ -115,11 +114,9 @@ $(document).ready(function () {
     });
 });
 
-
 function bindingAgenciesTable() {
-
     $.ajax({
-        url: '/psi/php_action/employeeFetch.php',
+        url: '/php_action/employeeFetch.php',
         type: 'get',
         dataType: 'json',
         success: function (response) {

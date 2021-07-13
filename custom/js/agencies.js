@@ -5,7 +5,7 @@ $(document).ready(function () {
     $('#nhanvien-selection').select2({
         placeholder: 'Chọn nhân viên',
         ajax: {
-            url: '/psi/php_action/AgencyAdd.php',
+            url: '/php_action/AgencyAdd.php',
             dataType: 'json',
             delay: 250,
             type: 'POST',
@@ -22,7 +22,7 @@ $(document).ready(function () {
         }
     });
 
-        $('#add_agency_btn').on('click', function (e) {
+    $('#add_agency_btn').on('click', function (e) {
         e.preventDefault();
 
         //Fetch form to apply custom Bootstrap validation
@@ -38,7 +38,7 @@ $(document).ready(function () {
         form.addClass('was-validated');
         if (form[0].checkValidity()) {
             $.ajax({
-                url: '/psi/php_action/agencyCreate.php',
+                url: '/php_action/agencyCreate.php',
                 type: 'POST',
                 data: data,
                 success: function (response) {
@@ -57,13 +57,12 @@ $(document).ready(function () {
     });
 });
 
-
 function bindingAgenciesTable() {
-	var userId = $("#user_id").val();
-    var levelId = $("#level_id").val();
+    var userId = $('#user_id').val();
+    var levelId = $('#level_id').val();
 
     $.ajax({
-        url: '/psi/php_action/agencyFetch.php?user_id=' + userId + '&levelId=' + levelId,
+        url: '/php_action/agencyFetch.php?user_id=' + userId + '&levelId=' + levelId,
         type: 'get',
         dataType: 'json',
         success: function (response) {

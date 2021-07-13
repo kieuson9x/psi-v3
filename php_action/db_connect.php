@@ -1,43 +1,23 @@
 <?php
-session_start();
-$host = "10.0.32.21";
-$username = "bitrix0";
-$password = "G{-QB!B=U]Zb41xHoT66";
-$dbname = "sitemanager";
-$dsn = 'mysql:host=' . $host . ';dbname=' . $dbname . ';charset=utf8';
+// $dbHost = "10.0.32.21";
+// $dbUserName = "bitrix0";
+// $dbPassword = "G{-QB!B=U]Zb41xHoT66";
+// $dbName = "sitemanager";
 
-if (!defined('URLROOT') || !defined('APPROOT')) {
-  define('URLROOT', 'https://home.kangaroo.vn/psi');
-  define('APPROOT', dirname(dirname(__FILE__)));
-}
+$dbHost = "127.0.0.1";
+$dbUserName = "root";
+$dbPassword = "";
+$dbName = "psi";
 
-if (!function_exists('data_get')) {
-  /**
-   *
-   * data get
-   *
-   * @param mixed $data  data
-   * @param string $path  path
-   * @param mixed $default default data
-   *
-   * @return mixed
-   */
-  function data_get($data, $path, $default = null)
-  {
-    $paths = explode('.', $path);
+$dsn = 'mysql:host=' . $dbHost . ';dbname=' . $dbName . ';charset=utf8';
 
-    return array_reduce($paths, function ($o, $p) use ($default) {
-      if (isset($o->$p)) return (is_object($o->$p) ? (array) $o->$p : $o->$p) ?? $default;
-      if (isset($o[$p])) return (is_object($o[$p]) ? (array) $o[$p] : $o[$p])  ?? $default;
-
-      return $default;
-    }, (array) $data);
-  }
+if (!defined('URLROOT')) {
+  define('URLROOT', 'http://psi-v3.test');
 }
 
 // db connection
 try {
-  $connect = new PDO($dsn, $username, $password);
+  $connect = new PDO($dsn, $dbUserName, $dbPassword);
   $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
   $errorMessage = $e->getMessage();
@@ -47,10 +27,15 @@ try {
 
 class Database
 {
-  private $dbHost = '10.0.32.21';
-  private $dbUser = 'bitrix0';
-  private $dbPass = 'G{-QB!B=U]Zb41xHoT66';
-  private $dbName = 'sitemanager';
+  // private $dbHost = '10.0.32.21';
+  // private $dbUserName = 'bitrix0';
+  // private $dbPassword = 'G{-QB!B=U]Zb41xHoT66';
+  // private $dbName = 'sitemanager';
+  private $dbHost = "127.0.0.1";
+  private $dbUserName = "root";
+  private $dbPassword = "";
+  private $dbName = "psi";
+
   private $charset = 'utf8';
   private $statement;
   private $dbHandler;
@@ -64,7 +49,7 @@ class Database
       PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     );
     try {
-      $this->dbHandler = new PDO($conn, $this->dbUser, $this->dbPass, $options);
+      $this->dbHandler = new PDO($conn, $this->dbUserName, $this->dbPassword, $options);
     } catch (PDOException $e) {
       $this->error = $e->getMessage();
       echo $this->error;
@@ -120,5 +105,19 @@ class Database
   public function rowCount()
   {
     return $this->statement->rowCount();
+  }
+}
+
+if (!function_exists('data_get')) {
+  function data_get($data, $path, $default = null)
+  {
+    $paths = explode('.', $path);
+
+    return array_reduce($paths, function ($o, $p) use ($default) {
+      if (isset($o->$p)) return (is_object($o->$p) ? (array) $o->$p : $o->$p) ?? $default;
+      if (isset($o[$p])) return (is_object($o[$p]) ? (array) $o[$p] : $o[$p])  ?? $default;
+
+      return $default;
+    }, (array) $data);
   }
 }
