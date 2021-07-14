@@ -3,6 +3,7 @@
 require_once 'core.php';
 require_once 'Inventory.php';
 require_once 'EmployeeSale.php';
+require_once 'Stock.php';
 
 $data = [];
 
@@ -29,9 +30,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {
             $createStatus = $inventoryModel->createInventory($data);
         }
-    }
 
-    syncYear($inventoryModel, $data);
+        syncYear($data);
+    }
 
     if ($updateStatus || $createStatus) {
         echo json_encode(['success' => true]);
@@ -45,12 +46,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // }
 }
 
-function syncYear($inventoryModel, $data)
+function syncYear($data)
 {
-    $month = $data['month'];
+    $currentMonth = (int) date('m');
+    $month = (int) $data['month'];
     $year = $data['year'];
 
-    for ($i = 0; $i < 12; $i++) {
+    $stockModel = new Stock();
+    $inventoryModel = new Inventory();
+
+    for ($i = $currentMonth - 1; $i < 12; $i++) {
         $month = $i + 1;
         $date = date("{$year}-${month}-1");
 
@@ -64,7 +69,6 @@ function syncYear($inventoryModel, $data)
             $newData['number_of_imported_goods'] = null;
 
             $inventoryModel->createInventory($newData);
-            $inventory = $inventoryModel->findInventory($data['product_id'], $month, $data['year']);
         }
 
         $employeeSaleModel = new EmployeeSale();
@@ -72,10 +76,20 @@ function syncYear($inventoryModel, $data)
         $totalSales = $employeeSaleModel->getTotalSalesByProduct($data['product_id'], $month, $data['year']);
         $totalProductSales = $totalSales->total_product_sales ?? 0;
 
-        $previousInventory = $inventoryModel->findInventory($data['product_id'], $previousMonth, $previousYear);
+        $numberOfPreviousInventory = 0;
+
+        if ($currentMonth === $month) {
+            $productId = $data['product_id'];
+            $stockValue = (int) data_get($stockModel->getStockByProductId($productId), 'stock', 0);
+
+            $numberOfPreviousInventory = $stockValue;
+        } else {
+            $previousInventory = $inventoryModel->findInventory($data['product_id'], $previousMonth, $previousYear);
+            $numberOfPreviousInventory = data_get($previousInventory, 'number_of_remaining_goods', 0);
+        }
+
         $currentInventory = $inventoryModel->findInventory($data['product_id'], $month, $year);
 
-        $numberOfPreviousInventory = data_get($previousInventory, 'number_of_remaining_goods', 0);
         $inventoryModel->syncRemainingGoods($data['product_id'], $month, $year, $totalProductSales, $currentInventory->number_of_imported_goods, $numberOfPreviousInventory);
     }
 }

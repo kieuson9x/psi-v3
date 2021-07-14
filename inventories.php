@@ -5,24 +5,16 @@
 <?php require_once 'includes/header.php'; ?>
 
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-12" style="margin-bottom: 15px;">
         <div class="card ">
             <div class="card-header">
-                Bảng nhập tồn kho
+                Chức năng
             </div>
             <div class="card-body">
                 <div class="form-group row">
-                    <label for="year" class="col-xs-2 col-form-label mr-2">Năm</label>
-                    <div class="col-xs-4 mr-2">
-                        <select id="year-selection" class="form-control" id="year" name="year">
-                            <?php for ($i = date('Y') - 1; $i <= date('Y') + 2; $i++) : ?>
-                                <option value="<?php echo $i ?>"><?php echo $i ?></option>
-                            <?php endfor ?>
-                        </select>
-                    </div>
                     <button id="btnFilterInventories" type="button" class="btn btn-primary mr-1 w-40  d-flex align-items-center justify-content">
-                        <i class="material-icons">filter_alt</i>
-                        Lọc
+                        <i class="material-icons">refresh</i>
+                        Đồng bộ CSDL
                     </button>
 
                     <div class="col-xs-4">
@@ -30,12 +22,104 @@
                                 mới</span></a>
                     </div>
                 </div>
+            </div> <!-- /panel-body -->
+        </div> <!-- /panel -->
+    </div> <!-- /col-md-12 -->
 
-                <table class="table table-striped" id="table_inventories">
+    <div class="col-md-12" style="margin-bottom: 15px;">
+        <div class="card ">
+            <div class="card-header">
+                VU1
+            </div>
+            <div class="card-body">
+                <table class="table table-striped table_inventories" id="inventories_VU1">
                     <thead>
                         <tr>
                             <td rowspan="2">ID</td>
+                            <td rowspan="2">Mã VT</td>
                             <td rowspan="2">Mã sản phẩm</td>
+                            <td rowspan="2">ĐVKD</td>
+                            <td rowspan="2">Tồn</td>
+                            <?php $month = date('m');
+                            for ($i = $month; $i <= 12; $i++) : ?>
+                                <th data-editable="true" colspan="3"><?php echo "Tháng {$i}"; ?></th>
+
+                            <?php endfor ?>
+                        </tr>
+
+                        <tr>
+                            <?php $month = date('m');
+                            for ($i = $month; $i <= 12; $i++) : ?>
+                                <th data-editable="true">P</th>
+                                <th>S</th>
+                                <th data-editable="true">I</th>
+                            <?php endfor ?>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+                <!-- /table -->
+
+            </div> <!-- /panel-body -->
+        </div> <!-- /panel -->
+    </div> <!-- /col-md-12 -->
+
+    <div class="col-md-12" style="margin-bottom: 15px;">
+        <div class="card ">
+            <div class="card-header">
+                DAN
+            </div>
+            <div class="card-body">
+                <table class="table table-striped table_inventories" id="inventories_DAN">
+                    <thead>
+                        <tr>
+                            <td rowspan="2">ID</td>
+                            <td rowspan="2">Mã VT</td>
+                            <td rowspan="2">Mã sản phẩm</td>
+                            <td rowspan="2">ĐVKD</td>
+                            <td rowspan="2">Tồn</td>
+                            <?php $month = date('m');
+                            for ($i = $month; $i <= 12; $i++) : ?>
+                                <th data-editable="true" colspan="3"><?php echo "Tháng {$i}"; ?></th>
+
+                            <?php endfor ?>
+                        </tr>
+
+                        <tr>
+                            <?php $month = date('m');
+                            for ($i = $month; $i <= 12; $i++) : ?>
+                                <th data-editable="true">P</th>
+                                <th>S</th>
+                                <th data-editable="true">I</th>
+                            <?php endfor ?>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+                <!-- /table -->
+
+            </div> <!-- /panel-body -->
+        </div> <!-- /panel -->
+    </div> <!-- /col-md-12 -->
+
+    <div class="col-md-12" style="margin-bottom: 15px;">
+        <div class="card ">
+            <div class="card-header">
+                HCM
+            </div>
+            <div class="card-body">
+                <table class="table table-striped table_inventories" id="inventories_HCM">
+                    <thead>
+                        <tr>
+                            <td rowspan="2">ID</td>
+                            <td rowspan="2">Mã VT</td>
+                            <td rowspan="2">Mã sản phẩm</td>
+                            <td rowspan="2">ĐVKD</td>
+                            <td rowspan="2">Tồn</td>
                             <?php $month = date('m');
                             for ($i = $month; $i <= 12; $i++) : ?>
                                 <th data-editable="true" colspan="3"><?php echo "Tháng {$i}"; ?></th>
@@ -84,7 +168,7 @@
                     <div class="form-group row">
                         <label>Năm</label>
                         <select id="year-selection_create" class="form-control" id="year" name="year" required>
-                            <?php for ($i = date('Y') - 1; $i <= date('Y') + 2; $i++) : ?>
+                            <?php for ($i = date('Y'); $i <= date('Y'); $i++) : ?>
                                 <option value="<?php echo $i ?>"><?php echo $i ?></option>
                             <?php endfor ?>
                         </select>
@@ -127,4 +211,6 @@
     <script src="custom/js/inventories.js"></script>
 
     <?php require_once 'includes/footer.php'; ?>
-    <?php require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php"); ?>
+    <?php
+    // require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php");
+    ?>

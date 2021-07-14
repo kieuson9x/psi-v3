@@ -19,7 +19,7 @@ if (!defined('URLROOT')) {
 		$statement = $connect->prepare($sql);
 		$statement->execute(['user_code' => $kr['UF_EMPLOYEE_CODE']]);*/
 if (!$_SESSION['user_id']) {
-	$sql = 'SELECT * FROM psi_employees WHERE user_code = "KR01697"';
+	$sql = 'SELECT * FROM psi_employees WHERE user_code = "taichinh"'; //KR01697
 	$statement = $connect->prepare($sql);
 	$statement->execute();
 

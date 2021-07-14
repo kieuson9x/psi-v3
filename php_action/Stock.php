@@ -13,19 +13,18 @@ class Stock
     public function getStockByProductId($productId)
     {
         $this->db->query(
-            'SELECT a.* FROM psi_stocks AS a
-                            CROSS JOIN psi_products AS b
-                            CROSS JOIN psi_business_units as c
-                            WHERE a.product_code = b.product_code AND
-                                  a.business_unit = c.business_unit_code AND
-                                  b.business_unit_id = c.business_unit_id AND
-                                  b.id = :product_id
+            'SELECT s.* FROM psi_products AS p
+                        JOIN psi_business_units as bu
+                        ON p.business_unit_id = bu.id
+                        LEFT JOIN psi_stocks as s
+                        ON s.product_code = p.product_code and bu.business_unit_code = s.business_unit
+                        WHERE p.id = :product_id
                                   '
         );
 
         $this->db->bind(':product_id', $productId);
 
-        $results = $this->db->resultSet();
+        $results = $this->db->single();
 
         return $results;
     }

@@ -79,7 +79,7 @@
                         <div class="form-group row">
                             <label>Năm</label>
                             <select id="year-selection_create" class="form-control" id="year" name="year" required>
-                                <?php for ($i = date('Y') - 1; $i <= date('Y') + 2; $i++) : ?>
+                                <?php for ($i = date('Y'); $i <= date('Y'); $i++) : ?>
                                     <option value="<?php echo $i ?>"><?php echo $i ?></option>
                                 <?php endfor ?>
                             </select>

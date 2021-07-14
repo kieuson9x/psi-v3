@@ -10,25 +10,36 @@ class Inventory
         $this->db = new Database;
     }
 
-    public function getInventories($year)
+    public function getInventories($currentBusinessUnitCode)
     {
+        $currentYear = (int) date('Y');
+        $currentMonth = date('m');
 
         $db = $this->db;
 
         $db->query("SELECT DISTINCT t1.product_id
                             FROM psi_inventories as t1
-                            WHERE DATE(CONCAT(`year`, '-', `month`, '-01')) BETWEEN '{$year}-01-01' AND '{$year}-12-31'
+                            WHERE DATE(CONCAT(`year`, '-', `month`, '-01')) BETWEEN '{$currentYear}-{$currentMonth}-01' AND '{$currentYear}-12-31'
                             ");
 
         $results = $this->db->resultSet();
 
-        $newResults = array_map(function ($item) use ($db, $year) {
+
+        $newResults = array_map(function ($item) use ($db, $currentYear, $currentMonth, $currentBusinessUnitCode) {
             $db->query("SELECT p.product_code, p.name, p.model, p.business_unit_id, p.industry_id, p.product_type_id,
-                                 t1.product_id, t1.month, t1.year, t1.number_of_imported_goods, t1.number_of_remaining_goods, t1.number_of_sale_goods
+                                 t1.product_id, t1.month, t1.year, t1.number_of_imported_goods, t1.number_of_remaining_goods, t1.number_of_sale_goods,
+                                 s.stock, bu.name as business_unit_name
                             FROM psi_inventories as t1
                             JOIN psi_products as p
                             ON p.id = t1.product_id
-                            WHERE t1.product_id = {$item->product_id} and DATE(CONCAT(`year`, '-', `month`, '-01')) BETWEEN '{$year}-01-01' AND '{$year}-12-31'");
+                            JOIN psi_business_units as bu
+                            ON p.business_unit_id = bu.id
+                            LEFT JOIN psi_stocks as s
+                            ON s.product_code = p.product_code AND bu.name = s.business_unit
+                            WHERE t1.product_id = {$item->product_id} AND
+                                (DATE(CONCAT(`year`, '-', `month`, '-10')) BETWEEN '{$currentYear}-{$currentMonth}-01' AND '{$currentYear}-12-31') AND
+                                bu.name = '{$currentBusinessUnitCode}'
+                                ");
             return $db->resultSet();
         }, $results);
 

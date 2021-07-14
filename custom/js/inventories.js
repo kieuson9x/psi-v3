@@ -3,13 +3,18 @@ $(document).ready(function () {
     // top nav bar
     $('#nav-link-inventory').addClass('active');
 
-    bindingInventories(new Date().getFullYear());
+    $('.table_inventories').each(function (table) {
+        var currentBusinessUnitCode = $(this).attr('id').replace('inventories_', '');
+        bindingInventories(currentBusinessUnitCode);
+    });
 
     $('#btnFilterInventories')
         .unbind('click')
         .bind('click', function () {
-            var currentYear = $('#year-selection').val();
-            bindingInventories(currentYear);
+            $('.table_inventories').each(function (table) {
+                var currentBusinessUnitCode = $(this).attr('id').replace('inventories_', '');
+                triggerSyncInventories(currentBusinessUnitCode);
+            });
         });
 
     $('#product-selection').select2({
@@ -80,13 +85,115 @@ $(document).ready(function () {
         e.preventDefault();
         $('form[name=add_inventory]').trigger('reset');
     });
-    $('#table_inventories').DataTable({
+    $('.table_inventories').DataTable({
         destroy: true,
         responsive: true,
         ordering: false
     });
+});
 
-    $('#table_inventories tbody tr td:not(.not-editable)').editable({
+function bindingInventories(currentBusinessUnitCode) {
+    var userId = $('#user_id').val();
+    var levelId = $('#level_id').val();
+    $.ajax({
+        url: '/php_action/inventoryFetch.php',
+        type: 'get',
+        data: {
+            userId: userId,
+            levelId: levelId,
+            currentBusinessUnitCode: currentBusinessUnitCode
+        },
+        dataType: 'json',
+        success: function (response) {
+            var { inventories, year } = response || {};
+
+            bindingInventoriesTable(currentBusinessUnitCode, inventories);
+        } // /success function
+    });
+}
+
+function triggerSyncInventories(currentBusinessUnitCode) {
+    var userId = $('#user_id').val();
+    var levelId = $('#level_id').val();
+    $.ajax({
+        url: '/php_action/inventoryFetch.php',
+        type: 'get',
+        data: {
+            userId: userId,
+            levelId: levelId,
+            force_sync: true,
+            currentBusinessUnitCode: currentBusinessUnitCode
+        },
+        dataType: 'json',
+        success: function (response) {
+            var { inventories, year } = response || {};
+
+            bindingInventoriesTable(currentBusinessUnitCode, inventories);
+        } // /success function
+    });
+}
+
+function bindingInventoriesTable(currentBusinessUnitCode, inventories) {
+    var table = $('#inventories_' + currentBusinessUnitCode + ' tbody');
+    table.empty();
+
+    $.each(inventories, function (idx, elem) {
+        var td = ``;
+        var d = new Date();
+        var n = d.getMonth();
+
+        for (var i = n; i < 12; i++) {
+            td += `
+            <td data-type="text" data-state="purchase" data-name="${i + 1}" data-pk="${_.get(elem, `0.product_id`)}">
+                ${
+                    _.get(
+                        _.find(elem, function (o) {
+                            return parseInt(o.month) === i + 1;
+                        }),
+                        'number_of_imported_goods'
+                    ) || 0
+                }
+            </td>
+
+            <td class="not-editable" data-state="sale">
+                ${
+                    _.get(
+                        _.find(elem, function (o) {
+                            return parseInt(o.month) === i + 1;
+                        }),
+                        'number_of_sale_goods'
+                    ) || 0
+                }
+            </td>
+
+            <td data-type="text" data-state="inventory" data-name="${i + 1}" data-pk="${_.get(elem, `0.product_id`)}">
+                ${
+                    _.get(
+                        _.find(elem, function (o) {
+                            return parseInt(o.month) === i + 1;
+                        }),
+                        'number_of_remaining_goods'
+                    ) || 0
+                }
+            </td>
+            `;
+        }
+
+        if (!_.isEmpty(elem)) {
+            table.append(`
+            <tr>
+                <td class="not-editable">${_.get(elem, '0.product_id', '')} </th>
+                <td class="not-editable">${_.get(elem, '0.product_code', '')} </td>
+                <td class="not-editable">${_.get(elem, '0.model') || 0} </th>
+                <td class="not-editable">${_.get(elem, '0.business_unit_name') || 0} </td>
+                <td class="not-editable">${_.get(elem, '0.stock') || 0} </td>
+                ${td}
+            </tr>
+          `);
+        }
+    });
+
+    $('.table_inventories tbody tr td:not(.not-editable)').editable({
         send: 'always',
         type: 'text',
         url: '/php_action/inventoryUpdate.php',
@@ -104,6 +211,7 @@ $(document).ready(function () {
         },
         success: function (response, newValue) {
             if (response && response.success) {
+                location.reload();
                 toastr.success('Cập nhật thành công!');
             } else {
                 toastr.error('Cập nhật không thành công!');
@@ -113,92 +221,5 @@ $(document).ready(function () {
             type: 'POST',
             dataType: 'json'
         }
-    });
-});
-
-function bindingInventories(year) {
-    var userId = $('#user_id').val();
-    var levelId = $('#level_id').val();
-    $.ajax({
-        url: '/php_action/inventoryFetch.php',
-        type: 'get',
-        data: {
-            userId: userId,
-            levelId: levelId,
-            year: year
-        },
-        dataType: 'json',
-        success: function (response) {
-            var { inventories, year } = response || {};
-
-            if (year) {
-                $('#year-selection option, #year-selection_create option').each(function () {
-                    if ($(this).val() == year) {
-                        $(this).attr('selected', 'selected');
-                    }
-                });
-            }
-
-            if (inventories) {
-                var table = $('#table_inventories tbody');
-                table.empty();
-
-                $.each(inventories, function (idx, elem) {
-                    var td = ``;
-                    var d = new Date();
-                    var n = d.getMonth();
-                    for (var i = n; i < 12; i++) {
-                        td += `
-                    <td data-type="text" data-state="purchase" data-name="${i + 1}" data-pk="${_.get(
-                            elem,
-                            `${i + 1}.product_id`
-                        )}">
-                        ${
-                            _.get(
-                                _.find(elem, function (o) {
-                                    return parseInt(o.month) === i + 1;
-                                }),
-                                'number_of_imported_goods'
-                            ) || 0
-                        }
-                    </td>
-
-                    <td class="not-editable" data-state="sale">
-                        ${
-                            _.get(
-                                _.find(elem, function (o) {
-                                    return parseInt(o.month) === i + 1;
-                                }),
-                                'number_of_sale_goods'
-                            ) || 0
-                        }
-                    </td>
-
-                    <td data-type="text" data-state="inventory" data-name="${i + 1}" data-pk="${_.get(
-                            elem,
-                            `${i + 1}.product_id`
-                        )}">
-                        ${
-                            _.get(
-                                _.find(elem, function (o) {
-                                    return parseInt(o.month) === i + 1;
-                                }),
-                                'number_of_remaining_goods'
-                            ) || 0
-                        }
-                    </td>
-                    `;
-                    }
-
-                    table.append(`
-                <tr>
-                    <td class="not-editable">${_.get(elem, '0.product_id', '')} </th>
-                    <td class="not-editable">${_.get(elem, '0.model') || 0} </th>
-                    ${td}
-                </tr>
-              `);
-                });
-            }
-        } // /success function
     });
 }
