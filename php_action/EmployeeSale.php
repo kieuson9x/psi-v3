@@ -10,10 +10,14 @@ class EmployeeSale
         $this->db = new Database;
     }
 
-    public function getAgencySales($agencyIds)
+    public function getAgencySales($agencyIds, $businessUnitId)
     {
         $currentYear = (int) date('Y');
         $currentMonth = date('m');
+
+        if (empty($agencyIds)) {
+            return [];
+        }
 
         $agencyIds = implode(",", $agencyIds);
         $db = $this->db;
@@ -24,8 +28,7 @@ class EmployeeSale
                             ");
 
         $results = $this->db->resultSet();
-
-        $newResults = array_map(function ($item) use ($db, $currentYear, $agencyIds, $currentMonth) {
+        $newResults = array_map(function ($item) use ($db, $currentYear, $agencyIds, $currentMonth, $businessUnitId) {
             $db->query("SELECT p.product_code, p.name, p.model, p.business_unit_id, p.industry_id, p.product_type_id,
                                  t1.product_id, t1.month, t1.year, t1.number_of_sale_goods, t1.agency_id, s.stock, bu.name as business_unit_name
                             FROM psi_agency_sales as t1
@@ -37,11 +40,61 @@ class EmployeeSale
                             on s.product_code = p.product_code AND bu.name = s.business_unit
                             WHERE t1.product_id = {$item->product_id} AND t1.agency_id = {$item->agency_id}
                                 AND (DATE(CONCAT(`year`, '-', `month`, '-01')) BETWEEN '{$currentYear}-{$currentMonth}-01' AND '{$currentYear}-12-31' )
-                                AND `agency_id` IN ($agencyIds)
+                                AND `agency_id` IN ($agencyIds) AND p.business_unit_id = {$businessUnitId}
                             ");
-            return $db->resultSet();
+            $result = $db->resultSet();
+            return empty($result) ? null : $result;
         }, $results);
 
+        $newResults = array_filter($newResults);
+
+        return $newResults;
+    }
+
+    public function getAgencySalesForChannelManager($agencyIds, $businessUnitId)
+    {
+        $currentYear = (int) date('Y');
+        $currentMonth = date('m');
+
+        if (empty($agencyIds)) {
+            return [];
+        }
+
+        $agencyIds = implode(",", $agencyIds);
+        $db = $this->db;
+
+        $db->query("SELECT DISTINCT t1.product_id, t1.agency_id
+                            FROM psi_agency_sales as t1
+                            WHERE (DATE(CONCAT(`year`, '-', `month`, '-10')) BETWEEN '{$currentYear}-{$currentMonth}-01' AND '{$currentYear}-12-31') AND `agency_id` IN ($agencyIds)
+                            ");
+
+        $results = $this->db->resultSet();
+
+        $newResults = array_map(function ($item) use ($db, $currentYear, $agencyIds, $currentMonth, $businessUnitId) {
+            $db->query("SELECT p.product_code, p.name, p.model, p.business_unit_id, p.industry_id, p.product_type_id,
+                                 t1.product_id, t1.month, t1.year, t1.number_of_sale_goods, t1.agency_id, s.stock, bu.name as business_unit_name, pr.price, (pr.price * t1.number_of_sale_goods) AS calculated_price, e.full_name
+                            FROM psi_agency_sales as t1
+                            JOIN psi_products as p
+                            ON p.id = t1.product_id
+                            JOIN psi_business_units as bu
+                            ON p.business_unit_id = bu.id
+                            JOIN psi_agencies as a
+                            ON a.id = t1.agency_id
+                            JOIN psi_employees as e
+                            ON a.employee_id = e.id
+                            LEFT JOIN psi_stocks as s
+                            on s.product_code = p.product_code AND bu.name = s.business_unit
+                            LEFT JOIN psi_prices as pr
+                            on pr.product_code = p.product_code AND pr.model = p.model
+                            WHERE t1.product_id = {$item->product_id} AND t1.agency_id = {$item->agency_id}
+                                AND (DATE(CONCAT(`year`, '-', `month`, '-01')) BETWEEN '{$currentYear}-{$currentMonth}-01' AND '{$currentYear}-12-31' )
+                                AND `agency_id` IN ($agencyIds) AND p.business_unit_id = {$businessUnitId}
+                            ");
+            $result = $db->resultSet();
+            return empty($result) ? null : $result;
+        }, $results);
+
+        $newResults = array_filter($newResults);
         return $newResults;
     }
 

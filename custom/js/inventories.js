@@ -166,7 +166,10 @@ function bindingInventoriesTable(currentBusinessUnitCode, inventories) {
                 }
             </td>
 
-            <td data-type="text" data-state="inventory" data-name="${i + 1}" data-pk="${_.get(elem, `0.product_id`)}">
+            <td class="not-editable" data-type="text" data-state="inventory" data-name="${i + 1}" data-pk="${_.get(
+                elem,
+                `0.product_id`
+            )}">
                 ${
                     _.get(
                         _.find(elem, function (o) {

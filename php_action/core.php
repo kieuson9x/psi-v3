@@ -6,7 +6,7 @@ if (!defined('URLROOT')) {
 	define('URLROOT', 'http://psi-v3.test');
 }
 
-//$user_code='KR03196';
+$user_code = 'KR03196';
 //$user_code='KR00005';
 /*$id_user = $_SESSION['SESS_AUTH']['USER_ID'];
 
@@ -18,8 +18,8 @@ if (!defined('URLROOT')) {
 		$sql = 'SELECT * FROM psi_employees WHERE user_code = :user_code';
 		$statement = $connect->prepare($sql);
 		$statement->execute(['user_code' => $kr['UF_EMPLOYEE_CODE']]);*/
-if (!$_SESSION['user_id']) {
-	$sql = 'SELECT * FROM psi_employees WHERE user_code = "taichinh"'; //KR01697
+if (!($_SESSION['user_id'] ?? false)) {
+	$sql = "SELECT * FROM psi_employees WHERE user_code = '{$user_code}'"; //KR01697 //taichinh //giam_doc_kenh_MT_TBNB //giam_doc_kenh_MT_VLXD //giam_doc_nganh_vlxd
 	$statement = $connect->prepare($sql);
 	$statement->execute();
 
@@ -31,6 +31,13 @@ if (!$_SESSION['user_id']) {
 
 		// Get employee level
 		$_SESSION['employee_level'] = getEmployeeLevel($connect, $row['level_id']);
+
+		$_SESSION['channel_id'] =  $row['channel_id'];
+		$_SESSION['channel_name'] = getChannel($connect, $row['channel_id']);
+
+		$_SESSION['business_unit_id'] =  $row['business_unit_id'];
+
+		$_SESSION['industry_id'] =  $row['industry_id'];
 	} else {
 		echo "<h2>Bạn không được phân quyền mục này</h2>";
 	}
@@ -45,6 +52,17 @@ function getEmployeeLevel($connect, $levelId)
 
 	return $row['name'] ?? null;
 }
+
+function getChannel($connect, $channelId)
+{
+	$sql = 'SELECT id, name FROM psi_channels WHERE id = :channelId';
+	$statement = $connect->prepare($sql);
+	$statement->execute(['channelId' => $channelId]);
+	$row = $statement->fetch(PDO::FETCH_ASSOC);
+
+	return $row['name'] ?? null;
+}
+
 
 if (!function_exists('data_get')) {
 	function data_get($data, $path, $default = null)

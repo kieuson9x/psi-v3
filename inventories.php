@@ -8,27 +8,6 @@
     <div class="col-md-12" style="margin-bottom: 15px;">
         <div class="card ">
             <div class="card-header">
-                Chức năng
-            </div>
-            <div class="card-body">
-                <div class="form-group row">
-                    <button id="btnFilterInventories" type="button" class="btn btn-primary mr-1 w-40  d-flex align-items-center justify-content">
-                        <i class="material-icons">refresh</i>
-                        Đồng bộ CSDL
-                    </button>
-
-                    <div class="col-xs-4">
-                        <a href="#addProductPlanModal" class="btn btn-success d-flex align-items-center justify-content " data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Thêm/Cập nhật số nhập
-                                mới</span></a>
-                    </div>
-                </div>
-            </div> <!-- /panel-body -->
-        </div> <!-- /panel -->
-    </div> <!-- /col-md-12 -->
-
-    <div class="col-md-12" style="margin-bottom: 15px;">
-        <div class="card ">
-            <div class="card-header">
                 VU1
             </div>
             <div class="card-body">

@@ -10,6 +10,9 @@ $data = [];
 $employeeId = $_SESSION['user_id'] ?? $_GET['userId'] ?? null;
 $levelId = $_SESSION['level_id'] ?? $_GET['levelId'] ?? null;
 $employeeLevel = $_SESSION['employee_level'] ?? null;
+$channelId = $_SESSION['channel_id'] ?? null;
+$channelName = $_SESSION['channel_name'] ?? null;
+$businessUnitId = $_SESSION['business_unit_id'] ?? $_POST['business_unit_id'] ?? null;
 
 $employeeSaleModel = new EmployeeSale();
 $agencyModel = new Agency();
@@ -20,7 +23,16 @@ if ($employeeLevel == "Quản lý khu vực") {
 
     $agencies = array_column($agencyModel->getAgenciesByAMS($employeeId), 'id');
 
-    $agencySales = $employeeSaleModel->getAgencySales($agencies);
+    $agencySales = $employeeSaleModel->getAgencySales($agencies, $businessUnitId);
+
+    $data['agency_sales'] = $agencySales;
+    $data['agencyOptions'] = $options;
+} else if ($employeeLevel === 'Giám đốc kênh') {
+    $options = $agencyModel->getAllAgencyOptionsByChannel($channelId);
+
+    $agencies = array_column($options, 'value');
+
+    $agencySales = $employeeSaleModel->getAgencySalesForChannelManager($agencies, $businessUnitId);
 
     $data['agency_sales'] = $agencySales;
     $data['agencyOptions'] = $options;

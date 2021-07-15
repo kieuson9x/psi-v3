@@ -10,20 +10,14 @@ $data = [];
 $userId = $_SESSION['user_id'] ?? $_GET['user_id'] ?? null;
 $levelId = $_SESSION['level_id'] ?? $_GET['levelId'] ?? null;
 $employeeLevel = $_SESSION['employee_level'] ?? null;
-$forceSync = (bool) ($_GET['force_sync'] ?? false);
 $currentBusinessUnitCode = $_GET['currentBusinessUnitCode'] ?? null;
 
 if ($employeeLevel == "Admin" || $employeeLevel == "Tài chính") {
     $inventoryModel = new Inventory;
 
     $inventories = $inventoryModel->getInventories($currentBusinessUnitCode);
-
+    syncYear($inventories);
     $data['inventories'] = $inventories;
-
-    if ($forceSync) {
-        syncYear($inventories);
-        $inventories = $inventoryModel->getInventories($currentBusinessUnitCode);
-    }
 
     echo json_encode($data);
 }

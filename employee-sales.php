@@ -32,7 +32,7 @@
                             <td>ĐVKD</td>
                             <!-- <td>Ngành hàng</td> -->
                             <!-- <td>Nhóm hàng</td> -->
-                            <td>Đại lý</td>
+                            <td>ASM</td>
                             <td>Tồn</td>
                             <?php $month = date('m');
                             for ($i = $month; $i <= 12; $i++) : ?>

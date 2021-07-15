@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['user_id'])) {
         $createStatus = $employeeSaleModel->createAgencySale($data['agency_id'], $data);
     }
 
-    syncYear($employeeSaleModel, $data);
+    syncYear($data);
     echo json_encode(['success' => true]);
 
     // if ($this->employeeSaleModel->updateOrcreateEmployeeSale($data)) {
@@ -43,12 +43,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['user_id'])) {
     // }
 }
 
-function syncYear($employeeSaleModel, $data)
+function syncYear($data)
 {
     $month = $data['month'];
     $year = $data['year'];
-    $inventoryModel = new Inventory();
 
+    $inventoryModel = new Inventory();
+    $employeeSaleModel = new EmployeeSale();
 
     for ($i = 0; $i < 12; $i++) {
         $month = $i + 1;

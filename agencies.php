@@ -4,7 +4,7 @@
 ?>
 <?php require_once 'includes/header.php'; ?>
 
-<?php if (!in_array($_SESSION['employee_level'], ['Quản lý khu vực', 'Admin'])) : ?>
+<?php if (!in_array($_SESSION['employee_level'], ['Quản lý khu vực', 'Admin', "Giám đốc kênh"])) : ?>
     <div class="row">
         <h4>Xin lỗi , Bạn không có quyền xem danh sách đại lý.</h4>
     </div>

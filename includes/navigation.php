@@ -12,7 +12,7 @@
                 <?php
                 $employee_level = $_SESSION['employee_level'] ?? '';
 
-                if ($employee_level == 'Quản lý khu vực' || $employee_level == 'Admin') :
+                if ($employee_level == 'Quản lý khu vực' || $employee_level == 'Admin' || $employee_level === "Giám đốc kênh") :
                 ?>
                     <li class="nav-item">
                         <a class="nav-link" href="<?php echo URLROOT . "/agencies.php" ?>">
@@ -48,6 +48,36 @@
                         <a class="nav-link" href="<?php echo URLROOT . "/employee-sales.php" ?>"" id=" nav-link-employee-sales">
                             <i class="material-icons" style="font-size: 13px">inventory_2</i>
                             Bảng nhập nhập số sales
+                        </a>
+                    </li>
+                <?php endif; ?>
+            <?php endif; ?>
+
+            <?php if (isset($_SESSION['user_id'])) : ?>
+                <?php
+                $employee_level = $_SESSION['employee_level'] ?? '';
+
+                if ($employee_level == 'Giám đốc kênh' || $employee_level == 'Admin') :
+                ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?php echo URLROOT . "/employee-sales-channel.php" ?>"" id=" nav-link-employee-sales-channel">
+                            <i class="material-icons" style="font-size: 13px">inventory_2</i>
+                            Bảng tồn kho + giá
+                        </a>
+                    </li>
+                <?php endif; ?>
+            <?php endif; ?>
+
+            <?php if (isset($_SESSION['user_id'])) : ?>
+                <?php
+                $employee_level = $_SESSION['employee_level'] ?? '';
+
+                if ($employee_level == 'Giám đốc ngành' || $employee_level == 'Admin') :
+                ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?php echo URLROOT . "/employee-sales-industry.php" ?>"" id=" nav-link-employee-sales-channel">
+                            <i class="material-icons" style="font-size: 13px">inventory_2</i>
+                            Bảng tồn kho + giá
                         </a>
                     </li>
                 <?php endif; ?>
