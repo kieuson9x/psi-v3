@@ -30,7 +30,7 @@ class EmployeeSale
         $results = $this->db->resultSet();
         $newResults = array_map(function ($item) use ($db, $currentYear, $agencyIds, $currentMonth, $businessUnitId) {
             $db->query("SELECT p.product_code, p.name, p.model, p.business_unit_id, p.industry_id, p.product_type_id,
-                                 t1.product_id, t1.month, t1.year, t1.number_of_sale_goods, t1.agency_id, s.stock, bu.name as business_unit_name
+                                 t1.product_id, t1.month, t1.year, t1.number_of_sale_goods, t1.agency_id, s.stock, bu.name as business_unit_name,(pr.price * t1.number_of_sale_goods) AS calculated_price
                             FROM psi_agency_sales as t1
                             JOIN psi_products as p
                             ON p.id = t1.product_id
@@ -38,6 +38,8 @@ class EmployeeSale
                             ON p.business_unit_id = bu.id
                             LEFT JOIN psi_stocks as s
                             on s.product_code = p.product_code AND bu.name = s.business_unit
+                            LEFT JOIN psi_prices as pr
+                            on pr.product_code = p.product_code AND pr.model = p.model
                             WHERE t1.product_id = {$item->product_id} AND t1.agency_id = {$item->agency_id}
                                 AND (DATE(CONCAT(`year`, '-', `month`, '-01')) BETWEEN '{$currentYear}-{$currentMonth}-01' AND '{$currentYear}-12-31' )
                                 AND `agency_id` IN ($agencyIds) AND p.business_unit_id = {$businessUnitId}

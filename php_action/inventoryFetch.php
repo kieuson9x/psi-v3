@@ -1,5 +1,4 @@
 <?php
-session_start();
 
 require_once 'Inventory.php';
 require_once 'EmployeeSale.php';
@@ -9,7 +8,7 @@ $data = [];
 
 $userId = $_SESSION['user_id'] ?? $_GET['user_id'] ?? null;
 $levelId = $_SESSION['level_id'] ?? $_GET['levelId'] ?? null;
-$employeeLevel = $_SESSION['employee_level'] ?? null;
+$employeeLevel = $_SESSION['employee_level'] ?? $_GET['employee_level'] ?? null;
 $currentBusinessUnitCode = $_GET['currentBusinessUnitCode'] ?? null;
 
 if ($employeeLevel == "Admin" || $employeeLevel == "Tài chính") {
@@ -30,7 +29,7 @@ function syncYear($inventories)
     $employeeSaleModel = new EmployeeSale();
     $inventoryModel = new Inventory();
     $stockModel = new Stock();
-
+    
     foreach ($inventories as $product) {
         $productId = data_get($product, '0.product_id');
         $stockValue = (int) data_get($stockModel->getStockByProductId($productId), 'stock', 0);

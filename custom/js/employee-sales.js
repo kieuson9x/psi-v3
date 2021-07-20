@@ -79,23 +79,59 @@ $(document).ready(function () {
         e.preventDefault();
         $('form[name=add_agency_sales]').trigger('reset');
     });
+
+    var userId = $('#user_id').val();
+
+    $('#agency-selection').select2({
+        placeholder: 'Chọn đại lý',
+        ajax: {
+            url: '/php_action/agencySearch.php',
+            dataType: 'json',
+            delay: 250,
+            type: 'POST',
+            data: function (data) {
+                return {
+                    query: data.term,
+                    userId: userId // search term
+                };
+            },
+            processResults: function (response) {
+                return {
+                    results: response
+                };
+            }
+        }
+    });
 });
 
 function bindingEmployeeSales(year) {
     var userId = $('#user_id').val();
     var levelId = $('#level_id').val();
+    var channel_id = $('#channel_id').val();
+    var employee_level = $('#employee_level').val();
+    var business_unit_id = $('#business_unit_id').val();
+    var industry_id = $('#industry_id').val();
+    var channel_name = $('#channel_name').val();
     $.ajax({
         url: '/php_action/employeeSaleFetch.php',
         type: 'get',
         data: {
             userId: userId,
             levelId: levelId,
-            year: year
+            year: year,
+            employee_level: employee_level,
+            channel_name: channel_name,
+            industry_id: industry_id,
+            business_unit_id: business_unit_id,
+            channel_id: channel_id
         },
         dataType: 'json',
         success: function (response) {
             var { agency_sales, year, agencyOptions } = response || {};
-
+            var formatter = new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            });
             if (year) {
                 $('#year-selection option, #year-selection_create option').each(function () {
                     if ($(this).val() == year) {
@@ -127,6 +163,19 @@ function bindingEmployeeSales(year) {
                             </td>
 
                     `;
+                        td += `
+                    <td class="not-editable" data-type="text" data-state="price" data-agency-id="${_.get(
+                        sale,
+                        '0.agency_id'
+                    )}" data-name="${i + 1}" data-pk="${_.get(sale, '0.product_id')}">
+                        ${formatter.format(
+                            _.get(
+                                _.find(sale, (o) => parseInt(o.month) === i + 1),
+                                'calculated_price'
+                            ) || 0
+                        )}
+                    </td>;
+                        `;
                     }
 
                     table.append(`
@@ -173,6 +222,7 @@ function bindingEmployeeSales(year) {
                     success: function (response, newValue) {
                         if (response && response.success) {
                             toastr.success('Cập nhật thành công!');
+                            location.reload();
                         } else {
                             toastr.error('Cập nhật không thành công!');
                         }
@@ -180,26 +230,6 @@ function bindingEmployeeSales(year) {
                     ajaxOptions: {
                         type: 'POST',
                         dataType: 'json'
-                    }
-                });
-
-                $('#agency-selection').select2({
-                    placeholder: 'Chọn đại lý',
-                    ajax: {
-                        url: '/php_action/agencySearch.php',
-                        dataType: 'json',
-                        delay: 250,
-                        type: 'POST',
-                        data: function (data) {
-                            return {
-                                query: data.term // search term
-                            };
-                        },
-                        processResults: function (response) {
-                            return {
-                                results: response
-                            };
-                        }
                     }
                 });
             }

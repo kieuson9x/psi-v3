@@ -5,7 +5,7 @@
 
 $aMenuLinks = array();
 $subArray =  array(
-    "Danh sách đại lý",
+    "Danh sách Nhà Phân Phối",
     "agencies.php",
     array(),
     array(),
@@ -22,8 +22,17 @@ $subArray =  array(
 array_push($aMenuLinks, $subArray);
 
 $subArray =  array(
-    "Bảng nhập tồn kho",
+    "Bảng Số lượng mua",
     "inventories.php",
+    array(),
+    array(),
+    ""
+);
+array_push($aMenuLinks, $subArray);
+
+$subArray =  array(
+    "Giám đốc kênh",
+    "employee-sales-channel.php",
     array(),
     array(),
     ""

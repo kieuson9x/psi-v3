@@ -36,13 +36,23 @@ $(document).ready(function () {
 function bindingEmployeeSalesChannel(year) {
     var userId = $('#user_id').val();
     var levelId = $('#level_id').val();
+    var channel_id = $('#channel_id').val();
+    var employee_level = $('#employee_level').val();
+    var business_unit_id = $('#business_unit_id').val();
+    var industry_id = $('#industry_id').val();
+    var channel_name = $('#channel_name').val();
     $.ajax({
         url: '/php_action/employeeSaleFetch.php',
         type: 'get',
         data: {
             userId: userId,
             levelId: levelId,
-            year: year
+            year: year,
+            employee_level: employee_level,
+            channel_name: channel_name,
+            industry_id: industry_id,
+            business_unit_id: business_unit_id,
+            channel_id: channel_id
         },
         dataType: 'json',
         success: function (response) {

@@ -1,6 +1,6 @@
 <?
-// require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
-// $APPLICATION->SetTitle("Hệ thống báo cáo  PSI");
+require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
+$APPLICATION->SetTitle("Hệ thống báo cáo  PSI");
 ?>
 <?php require_once 'includes/header.php'; ?>
 
@@ -37,6 +37,7 @@
                             <?php $month = date('m');
                             for ($i = $month; $i <= 12; $i++) : ?>
                                 <th data-editable="true"><?php echo "Tháng {$i}"; ?></th>
+                                <th data-editable="true">Tổng tiền</th>
                             <?php endfor ?>
                         </thead>
                         <tbody>
@@ -122,5 +123,5 @@
     <?php endif; ?>
     <?php require_once 'includes/footer.php'; ?>
     <?
-    // require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php");
+    require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php");
     ?>

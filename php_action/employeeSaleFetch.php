@@ -1,5 +1,4 @@
 <?php
-session_start();
 
 require_once 'EmployeeSale.php';
 require_once 'Agency.php';
@@ -9,10 +8,12 @@ $data = [];
 
 $employeeId = $_SESSION['user_id'] ?? $_GET['userId'] ?? null;
 $levelId = $_SESSION['level_id'] ?? $_GET['levelId'] ?? null;
-$employeeLevel = $_SESSION['employee_level'] ?? null;
-$channelId = $_SESSION['channel_id'] ?? null;
-$channelName = $_SESSION['channel_name'] ?? null;
-$businessUnitId = $_SESSION['business_unit_id'] ?? $_POST['business_unit_id'] ?? null;
+
+$employeeLevel = $_GET['employee_level'] ?? null;
+
+$channelId = $_GET['channel_id'] ?? null;
+$channelName = $_GET['channel_name'] ?? null;
+$businessUnitId = $_SESSION['business_unit_id'] ?? $_GET['business_unit_id'] ?? null;
 
 $employeeSaleModel = new EmployeeSale();
 $agencyModel = new Agency();

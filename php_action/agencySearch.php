@@ -8,12 +8,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $keyword = strval($_POST['query'] ?? '');
 
-
     $productResult = [];
 
     $search_param = "%{$keyword}%";
 
-    $agencies = $agencyModel->searchAgencyByAMS($_SESSION['user_id'], $search_param);
+    $agencies = $agencyModel->searchAgencyByAMS($_POST['userId'], $search_param);
 
     $agenciesOptions = array_map(function ($item) {
         return [

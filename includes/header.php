@@ -56,9 +56,10 @@
 <body>
   <input type="hidden" id="user_id" value="<?php echo $_SESSION['user_id']; ?>" />
   <input type="hidden" id="level_id" value="<?php echo $_SESSION['level_id']; ?>" />
-
-  <?php
-  require 'includes/navigation.php';
-  ?>
-
-  <div class="container-fluid" id="main">
+  <input type="hidden" id="employee_level" value="<?php echo $_SESSION['employee_level']; ?>" />
+  <input type="hidden" id="channel_id" value="<?php echo $_SESSION['channel_id']; ?>" />
+  <input type="hidden" id="business_unit_id" value="<?php echo $_SESSION['business_unit_id']; ?>" />
+  <input type="hidden" id="industry_id" value="<?php echo $_SESSION['industry_id']; ?>" />
+  <input type="hidden" id="channel_name" value="<?php echo $_SESSION['channel_name']; ?>" />
+  
+  <div class="" style="padding:15px;" id="main">

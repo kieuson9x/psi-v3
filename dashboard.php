@@ -1,6 +1,6 @@
 <?
-// require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
-// $APPLICATION->SetTitle("Hệ thống báo cáo  PSI");
+require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
+ $APPLICATION->SetTitle("Hệ thống báo cáo  PSI");
 ?>
 
 <?php require_once 'includes/header.php'; ?>
@@ -10,5 +10,5 @@
 </div>
 
 <?
-// require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php");
+ require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php");
 ?>

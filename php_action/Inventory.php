@@ -40,9 +40,11 @@ class Inventory
                                 (DATE(CONCAT(`year`, '-', `month`, '-10')) BETWEEN '{$currentYear}-{$currentMonth}-01' AND '{$currentYear}-12-31') AND
                                 bu.name = '{$currentBusinessUnitCode}'
                                 ");
-            return $db->resultSet();
+            $result = $db->resultSet();
+            return empty($result) ? null : $result;
         }, $results);
 
+        $newResults = array_filter($newResults);
         return $newResults;
     }
 

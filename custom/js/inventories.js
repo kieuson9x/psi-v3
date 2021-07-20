@@ -8,15 +8,6 @@ $(document).ready(function () {
         bindingInventories(currentBusinessUnitCode);
     });
 
-    $('#btnFilterInventories')
-        .unbind('click')
-        .bind('click', function () {
-            $('.table_inventories').each(function (table) {
-                var currentBusinessUnitCode = $(this).attr('id').replace('inventories_', '');
-                triggerSyncInventories(currentBusinessUnitCode);
-            });
-        });
-
     $('#product-selection').select2({
         placeholder: 'Chọn sản phẩm',
         ajax: {
@@ -90,38 +81,57 @@ $(document).ready(function () {
         responsive: true,
         ordering: false
     });
+
+    $('#exportExcel').on('click', function (e) {
+        e.preventDefault();
+        var userId = $('#user_id').val();
+        var levelId = $('#level_id').val();
+        var employee_level = $('#employee_level').val();
+
+        $.ajax({
+            url: '/php_action/inventoryExportExcel.php',
+            type: 'POST',
+            data: {
+                userId: userId,
+                levelId: levelId,
+                employee_level: employee_level
+            },
+            dataType: 'json',
+            success: function (response) {
+                const { file_url, file_name, error } = response || {};
+                if (file_url) {
+                    var redirectWindow = window.open(file_url, '_blank');
+                    redirectWindow.location;
+
+                    $.ajax({
+                        url: '/php_action/inventoryExportExcelDelete.php',
+                        type: 'POST',
+                        data: {
+                            file_name: file_name
+                        },
+                        dataType: 'json',
+                        success: function (response) {}
+                    });
+                } else {
+                    toastr.error('Không có quyền truy cập');
+                }
+            }
+        });
+    });
 });
 
 function bindingInventories(currentBusinessUnitCode) {
     var userId = $('#user_id').val();
     var levelId = $('#level_id').val();
+    var employee_level = $('#employee_level').val();
+
     $.ajax({
         url: '/php_action/inventoryFetch.php',
         type: 'get',
         data: {
             userId: userId,
             levelId: levelId,
-            currentBusinessUnitCode: currentBusinessUnitCode
-        },
-        dataType: 'json',
-        success: function (response) {
-            var { inventories, year } = response || {};
-
-            bindingInventoriesTable(currentBusinessUnitCode, inventories);
-        } // /success function
-    });
-}
-
-function triggerSyncInventories(currentBusinessUnitCode) {
-    var userId = $('#user_id').val();
-    var levelId = $('#level_id').val();
-    $.ajax({
-        url: '/php_action/inventoryFetch.php',
-        type: 'get',
-        data: {
-            userId: userId,
-            levelId: levelId,
-            force_sync: true,
+            employee_level: employee_level,
             currentBusinessUnitCode: currentBusinessUnitCode
         },
         dataType: 'json',
@@ -214,8 +224,8 @@ function bindingInventoriesTable(currentBusinessUnitCode, inventories) {
         },
         success: function (response, newValue) {
             if (response && response.success) {
-                location.reload();
                 toastr.success('Cập nhật thành công!');
+                location.reload();
             } else {
                 toastr.error('Cập nhật không thành công!');
             }
