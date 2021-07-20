@@ -5,7 +5,8 @@ require_once 'core.php';
 $data = [];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $fileName = "Bảng Số lượng mua-20_07_2021.xlsx";
+    $fileName = $_POST['file_name'] ?? "";
+
     $basepath = $_SERVER["DOCUMENT_ROOT"];
     $path = $basepath . '\\excelData\\' . $fileName;
     $exists = file_exists($path);
