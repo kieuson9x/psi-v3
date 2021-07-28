@@ -100,6 +100,55 @@ class EmployeeSale
         return $newResults;
     }
 
+    public function getAgencySalesForIndustryManager($industryId, $businessUnitId)
+    {
+        $currentYear = (int) date('Y');
+        $currentMonth = date('m');
+
+        $db = $this->db;
+
+        $db->query("SELECT DISTINCT t1.product_id, t1.agency_id
+                            FROM psi_agency_sales as t1
+                            WHERE DATE(CONCAT(`year`, '-', `month`, '-10')) BETWEEN '{$currentYear}-{$currentMonth}-01' AND '{$currentYear}-12-31'
+                            ");
+
+        $results = $this->db->resultSet();
+
+        $newResults = array_map(function ($item) use ($db, $currentYear, $currentMonth, $industryId, $businessUnitId) {
+            $businessUnitQuery = $businessUnitId !== 'all' ? " AND bu.id = {$businessUnitId}" : "";
+            $db->query("SELECT p.product_code, p.name, p.model, p.business_unit_id, p.industry_id, p.product_type_id,
+                                 t1.product_id, t1.month, t1.year, t1.number_of_sale_goods, t1.agency_id, s.stock,
+                                 bu.name as business_unit_name, pr.price, (pr.price * t1.number_of_sale_goods) AS calculated_price, e.full_name,
+                                 pt.name as product_type_name, i.name as industry_name, a.name as agency_name
+                            FROM psi_agency_sales as t1
+                            JOIN psi_products as p
+                            ON p.id = t1.product_id
+                            JOIN psi_business_units as bu
+                            ON p.business_unit_id = bu.id
+                            JOIN psi_agencies as a
+                            ON a.id = t1.agency_id
+                            JOIN psi_employees as e
+                            ON a.employee_id = e.id
+                            JOIN psi_product_types as pt
+                            ON p.product_type_id = pt.id
+                            JOIN psi_industries as i
+                            ON p.industry_id = i.id
+                            LEFT JOIN psi_stocks as s
+                            on s.product_code = p.product_code AND bu.name = s.business_unit
+                            LEFT JOIN psi_prices as pr
+                            on pr.product_code = p.product_code AND pr.model = p.model
+                            WHERE t1.product_id = {$item->product_id} AND t1.agency_id = {$item->agency_id}
+                                AND (DATE(CONCAT(`year`, '-', `month`, '-01')) BETWEEN '{$currentYear}-{$currentMonth}-01' AND '{$currentYear}-12-31' )
+                                AND p.industry_id = {$industryId} {$businessUnitQuery}
+                            ");
+            $result = $db->resultSet();
+            return empty($result) ? null : $result;
+        }, $results);
+
+        $newResults = array_filter($newResults);
+        return $newResults;
+    }
+
     public function findAgencySale($agencyId, $productId, $month, $year)
     {
         $this->db->query('SELECT * FROM psi_agency_sales WHERE product_id = :product_id and month = :month and year = :year and agency_id = :agency_id');

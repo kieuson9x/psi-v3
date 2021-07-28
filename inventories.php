@@ -1,9 +1,9 @@
 <?php
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
-$APPLICATION->SetTitle("Hệ thống báo cáo  PSI");
+// $APPLICATION->SetTitle("Hệ thống báo cáo  PSI");
 ?>
 <?php require_once 'includes/header.php'; ?>
-<?php if (!in_array($_SESSION['employee_level'], ['Tài chính', 'Admin'])) : ?>
+<?php if (!in_array($_SESSION['employee_level'] ?? "", ['Tài chính', 'Admin'])) : ?>
     <div class="row">
         <h4>Xin lỗi , Bạn không có quyền xem mục này.</h4>
     </div>

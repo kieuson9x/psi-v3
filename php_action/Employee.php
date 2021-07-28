@@ -14,7 +14,7 @@ class Employee
 
     public function getEmployee()
     {
-        $this->db->query('SELECT a.login,b.UF_EMPLOYEE_CODE FROM b_user AS a JOIN b_uts_user AS b ON a.ID = b.VALUE_ID WHERE a.active = "Y" 
+        $this->db->query('SELECT a.login,b.UF_EMPLOYEE_CODE FROM b_user AS a JOIN b_uts_user AS b ON a.ID = b.VALUE_ID WHERE a.active = "Y"
         AND b.UF_EMPLOYEE_CODE IS NOT NULL AND a.LID IS NOT NULL AND UF_SUB_DEPARTMENT IS NOT NULL AND work_department IS NOT NULL AND work_department<>""');
 
         $results = $this->db->resultSet();
@@ -73,5 +73,26 @@ class Employee
         $db->bind(':level_id', data_get($data, 'chucvu'));
 
         return $db->execute();
+    }
+
+    public function getASMOptionsByChannelId($channelId)
+    {
+        $this->db->query('SELECT e.id, e.full_name
+                        FROM psi_employees AS e
+                        JOIN psi_employee_levels as el
+                        ON el.id = e.level_id
+                        WHERE e.channel_id = :channel_id and el.name like "Quản lý khu vực"
+        ');
+
+        $this->db->bind(':channel_id', $channelId);
+
+        $results = $this->db->resultSet();
+
+        return array_map(function ($value) {
+            return [
+                'value' => $value->id,
+                'title' => $value->full_name,
+            ];
+        }, $results);
     }
 }

@@ -1,16 +1,21 @@
 <?php
-session_start();
 require_once 'db_connect.php';
 
 if (!defined('URLROOT')) {
 	define('URLROOT', 'http://psi-v3.test');
 }
 
-$user_code = 'taichinh';
+$user_code = 'giam_doc_nganh_dl';
 //giam_doc_kenh_MT_TBNB : giam doc kenh
 //tai chinh : KR03196;
+//tai chinh : taichinh;
 //ASM mien nam : KR01427
 //ASM tap doan : 'KR00005';
+//giam_doc_nganh_vlxd : 'giam_doc_nganh_vlxd';
+// giam_doc_nganh_dl
+
+
+//ASM Phạm Văn Chỉnh : 'KR01697';
 /*$id_user = $_SESSION['SESS_AUTH']['USER_ID'];
 
 		$sql = "SELECT UF_EMPLOYEE_CODE FROM b_uts_user WHERE VALUE_ID = $id_user";

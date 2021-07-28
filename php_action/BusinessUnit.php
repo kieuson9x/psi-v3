@@ -12,7 +12,7 @@ class BusinessUnit
 
     public function getBusinessUnitOptions()
     {
-        $this->db->query('SELECT id, name FROM psi_agencies');
+        $this->db->query('SELECT id, name FROM psi_business_units');
 
         $results = $this->db->resultSet();
 

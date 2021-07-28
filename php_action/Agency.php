@@ -110,6 +110,7 @@ class Agency
             ];
         }, $results);
     }
+
     public function getEmployee()
     {
         $this->db->query('SELECT * FROM psi_employees');
@@ -119,7 +120,7 @@ class Agency
         return $results;
     }
 
-    public function getAllAgencyOptions()
+    public function getAllAgencyOptions($asmId = null)
     {
         $this->db->query('SELECT id, name FROM psi_agencies');
 
@@ -133,9 +134,28 @@ class Agency
         }, $results);
     }
 
+    public function getAllAgencyOptionsByAsm($asmId = null)
+    {
+        $this->db->query('SELECT a.id, a.name
+                        FROM psi_agencies AS a
+                        JOIN psi_employees AS e
+                        ON a.employee_id = e.id
+                        WHERE e.id = :asm_id
+        ');
+
+        $this->db->bind(':asm_id', $asmId);
+        $results = $this->db->resultSet();
+
+        return array_map(function ($value) {
+            return [
+                'value' => $value->id,
+                'title' => $value->name,
+            ];
+        }, $results);
+    }
+
     public function getAllAgencyOptionsByChannel($channelId)
     {
-
         $this->db->query('SELECT a.id, a.name
                         FROM psi_agencies AS a
                         JOIN psi_employees AS e
